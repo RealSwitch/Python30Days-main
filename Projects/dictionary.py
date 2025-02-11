@@ -34,12 +34,7 @@ To further expand and enhance this project, you can consider adding features lik
 - Better User Interface: Develop a graphical user interface (GUI) for a more user-friendly experience.
 '''
 # Feel free to explore and customize this project to suit your learning goals and interests. Happy coding! -->
-
-
-
-
 import sqlite3
-
 class DictionaryApp:
     def __init__(self,db_name):
         self.conn = sqlite3.connect(db_name)
@@ -75,9 +70,9 @@ class DictionaryApp:
         self.cursor.execute('DELETE FROM words WHERE word = ?',(word,))
         self.conn.commit()
         
-    def update_meaning(self,word,**kwargs):
-        meaning = kwargs.get('meanig', None)
-        sentence = kwargs.get('sentence', None)
+    def update_meaning(self,word,meaning,sentence):
+        dictionary  = DictionaryApp("words.db")
+        dictionary.delete_word(word)
         self.cursor.execute("INSERT INTO words (word, meaning,sentence) VALUES ( ?, ?, ?)",(word,meaning,sentence))
         self.conn.commit()
     
@@ -94,8 +89,8 @@ def main():
         print("4 : Delete Words")
         print("5 : Update dictionary")
         print("5 : Exit")
-
         choice = input("Select an operations : ")
+
         if choice == "1" :
             word = input("Word: ")
             meaning = input("Meaning: ")
@@ -130,11 +125,12 @@ def main():
         elif choice == '5':
             words = dictionary.list_words()
             word = input("Word: ")
+#             print(words)
+            meaning = input("Meaning: ")
+            sentence = input("Example Sentence: ")
             if word in words:
-                meaning = input("Meaning: ")
-                sentence = input("Example Sentence: ")
-            # dictionary.add_word(word,meaning,sentence)
-                dictionary.update_meaning(meaning,sentence)
+                dictionary.update_meaning(word)
+                dictionary.add_word(word,meaning,sentence)
             
         elif choice == "6":
             dictionary.close()
